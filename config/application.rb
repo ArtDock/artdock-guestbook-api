@@ -27,7 +27,8 @@ module PoapappApi
         origins "http://localhost:8080", 'https://poap-app-hosting.web.app'
         resource "*",
           headers: :any,
-          methods: [:get, :post, :options, :head]
+          expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
+          methods: [:get, :post, :options, :head, :delete]
           # credentials: true
       end
     end
@@ -51,5 +52,6 @@ module PoapappApi
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
     config.action_controller.default_protect_from_forgery = false
+    config.session_store :cookie_store, secure: Rails.env.production?
   end
 end

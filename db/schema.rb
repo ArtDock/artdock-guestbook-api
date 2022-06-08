@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_22_035107) do
+ActiveRecord::Schema.define(version: 2022_06_07_043638) do
 
   create_table "events", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
@@ -18,14 +18,13 @@ ActiveRecord::Schema.define(version: 2022_05_22_035107) do
     t.text "description"
     t.string "city"
     t.string "country"
-    t.datetime "start_date"
-    t.datetime "end_date"
-    t.datetime "expiry_date"
+    t.date "start_date"
+    t.date "end_date"
+    t.date "expiry_date"
     t.integer "year"
     t.string "event_url"
     t.boolean "virtual_event"
     t.string "image"
-    t.integer "secret_code"
     t.integer "event_template_id"
     t.string "email"
     t.integer "requested_codes"
@@ -75,6 +74,11 @@ ActiveRecord::Schema.define(version: 2022_05_22_035107) do
     t.datetime "reset_password_sent_at"
     t.boolean "allow_password_change", default: false
     t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
     t.string "name"
     t.string "email"
     t.string "role"

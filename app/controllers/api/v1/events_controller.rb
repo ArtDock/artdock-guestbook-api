@@ -41,11 +41,12 @@ module Api
       end
 
       private
-
+      # 変数の定義
       def set_event
         @event = Event.find(params[:id])
       end
 
+      # 必要なパラメータと許可するパラメータ
       def event_params
         params.require(:event).permit(:user, :name, :description, :city, :country, :start_date, :end_date, :expiry_date, :year, :event_url, :virtual_event, :image, :secret_code, :event_template_id, :email, :requested_codes, :private_event)
       end

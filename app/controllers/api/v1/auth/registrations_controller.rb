@@ -2,14 +2,16 @@ module Api
     module V1
       module Auth
         class RegistrationsController < DeviseTokenAuth::RegistrationsController
-            protect_from_forgery
             private
             def sign_up_params
-                params.permit(:name, :role, :email, :password, :password_confirmation)
+                params.permit(:name, :email, :password, :password_confirmation)
             end
   
             def account_update_params
-                params.permit(:name, :role, :email, :img)
+                params.permit(:name, :role_id, :img)
+                @role = Role.find(params[:role_id])
+                user = User.find_by(email: request.headers[:HTTP_UID])
+                @role.users << user
             end
         end
       end
