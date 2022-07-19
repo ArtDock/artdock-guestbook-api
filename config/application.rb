@@ -13,7 +13,7 @@ require "action_text/engine"
 require "action_view/railtie"
 require "action_cable/engine"
 # require "sprockets/railtie"
-require "rails/test_unit/railtie"
+# require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -22,16 +22,16 @@ Bundler.require(*Rails.groups)
 module PoapappApi
   class Application < Rails::Application
     # Permit cross origin
-    config.middleware.insert_before 0, Rack::Cors do
-      allow do
-        origins "http://localhost:8080", 'https://poap-app-hosting.web.app'
-        resource "*",
-          headers: :any,
-          expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
-          methods: [:get, :post, :options, :head, :delete]
-          # credentials: true
-      end
-    end
+    # config.middleware.insert_before 0, Rack::Cors do
+    #   allow do
+    #     origins "http://localhost:8080", 'https://poap-app-hosting.web.app'
+    #     resource "*",
+    #       headers: :any,
+    #       expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
+    #       methods: [:get, :post, :options, :head, :delete]
+    #       # credentials: true
+    #   end
+    # end
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
 
@@ -47,11 +47,23 @@ module PoapappApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
-    config.middleware.use ActionDispatch::Flash
+    # ここを1つコメントアウトした
+    # config.middleware.use ActionDispatch::Flash
     # Cookies
-    config.middleware.use ActionDispatch::Cookies
-    config.middleware.use ActionDispatch::Session::CookieStore
-    config.action_controller.default_protect_from_forgery = false
-    config.session_store :cookie_store, secure: Rails.env.production?
+    # ここを4つコメントアウトした
+    # config.middleware.use ActionDispatch::Cookies
+    # config.middleware.use ActionDispatch::Session::CookieStore
+    # config.action_controller.default_protect_from_forgery = false
+    # config.session_store :cookie_store, secure: Rails.env.production?
+    # ここを一つ足した
+    config.paths.add 'lib', eager_load: true
+
+    # 環境変数の設定
+    config.before_configuration do
+      env_file = File.join(Rails.root, 'config', 'local_env.yml')
+      YAML.load(File.open(env_file)).each do |key, value|
+        ENV[key.to_s] = value
+      end if File.exists?(env_file)
+    end
   end
 end

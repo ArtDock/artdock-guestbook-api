@@ -20,7 +20,8 @@ Devise.setup do |config|
   # Configure the parent class to the devise controllers.
   # config.parent_controller = 'DeviseController'
   # devise_controller
-  config.parent_controller = 'ActionController::API'
+  # config.parent_controller = 'ActionController::API'
+  # config.parent_controller = "ActionController::Base"
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,

@@ -1,11 +1,9 @@
 module Api
     module V1
       class UsersController < ApplicationController
-        before_action :authenticate_api_v1_user!, except: [:show, :index]
+        before_action :authenticate_api_v1_user!
         before_action :set_user, only: [:show, :update, :destroy]
         
-        
-  
         def index
             users = User.order(created_at: :desc)
             render json: { status: 'SUCCESS', message: 'Loaded users', data: users }
@@ -13,11 +11,28 @@ module Api
   
         def show
             role = @user.role_users.select(:role_id)
-            role_id = (role.last)[:role_id]
-            role_name = Role.find(role_id).role_name
+            role_name = []
+
+            role.each do |data|
+              role_id = data["role_id"]
+              role_name.push(Role.find(role_id).role_name)
+            end
+
             @user.role = role_name
-            # event = @user.events.select(:city)
             render json: { status: 'SUCCESS', message: 'Loaded the user', data: @user }
+        end
+
+        def my_page
+          role = current_api_v1_user.role_users.select(:role_id)
+            role_name = []
+
+            role.each do |data|
+              role_id = data["role_id"]
+              role_name.push(Role.find(role_id).role_name)
+            end
+
+            current_api_v1_user.role = role_name
+          render json: { status: 'SUCCESS', message: 'Loaded your data', data: current_api_v1_user }
         end
   
         # def destroy
