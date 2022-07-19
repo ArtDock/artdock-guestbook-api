@@ -15,6 +15,6 @@ test:
 
 production:
   <<: *default
-  database: poapapp_api_production
+  database: heroku_6278e56f5b9acb7
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
