@@ -49,3 +49,9 @@ gem 'bcrypt'
 gem 'devise'
 gem 'devise_token_auth'
 gem 'omniauth'
+
+gem 'carrierwave'
+
+# google-cloud
+gem "google-cloud-storage"
+gem "sinatra"

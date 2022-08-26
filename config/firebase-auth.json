@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "poap-app-hosting",
+  "private_key_id": "2af6088e846dd8bd734c63030e2874f7960cdb98",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC10N2qeY6AxgdW\nnhyXFXRruEhKntAkarFJP+QEjGGOvEyL8EaGmz5KaN0d8XPFXJkaHNI2f3gspIDr\njJNgiin/0Df36I80QsXg5O6lzJbQuI+siZEha2L4A2qjpzGlAMJVKu83KM4v/vJ9\nugc9eNd9qj8/bxihuRYVVYIgeHiXYZEun+TNzPZlvSS41uHl4CNktjDVUyAyK2Zo\nvJkzgoglHSWuuSJTKAQcpstb31CLkqL6oYSCrJE9XPqdU4q/OGj7LOeZLXCPSYZb\n9rDdtsOsV8GFJXAM8m+N77koI2wM6IjHHMEUQFMLzf4su7yMOcnVlr/Fx630iYKh\n7LTAegf1AgMBAAECggEABJe/mbhTXLZj5hC9aSWeGMCBdv0XBex6CP8nq+O97SSd\njGVn6quOQcPvXfvE8GXb6jhzKPREXWBUb17QND6ZPACPAWCrCWdsZzdxPdfysVgQ\nLQwWkfEMAXbYoUSucNwZjJw2ib6qorS+fGWQHEHqs55y1Y/hX+h0gdp0nIxeg3hl\nCwjJNPv5Q2bxkwiUcVEZHPkHcB1PqBA3nH1HrFvSSojXJfrFazqlzD0cGXR0DIlK\nZCIgHAcVtEHiQsJZvJ5DPbMGiNy2yKnaCjSn7TN+rkYwzWQYKHqHq6y/SYAOFIPZ\nqAw2XqWsylRrdW4BfRpMiIBJhgau2MSgH2Zrbav0kQKBgQDpXeE7kBrtA1TBAPea\nUP7NMYHd5ZK3EFV3zJLY5DdhviIyqu0G2EyVNapQXLyw5hUi+wjvZTT3YtJZ8+oe\n4Zoy27rkJkBVCcBOB9gsQGEVu0mHOLCzSX6Q7JyhviI6WTCb+1Oz5PO+117NSXlU\nDSY2WUs48D2aATctdC3Uk5RVKQKBgQDHcw/OxpkGT5Zlu2esHGmU+KcT5m9W546x\n9fI2MsOWnO2Lg4oEITw7MbCURQXIjJ5fEp0bUMa9Ipab7Foc7ccOnoPWd5qp9duv\n2ne4+yI0M5GoE+AMFJuCvqQMoOzFDzJK/DTsRN0sXbCOsqHBAj2duPCsmB3t/rEQ\ncGMgLjrJ7QKBgDQre52wMoTH2Nuo1rGV59CBf9HWb70jFqhIgI+iPUtJkSWYlpKQ\nKla0/5Ullj1JwnHmgvHZw0SGwBXB9JXgw3MZMies8XbRTj9je40w+0M7ck2be80o\n4fWOH9n8wnQe2kIUpnqx9Ve1mAj2ovwKUH+X6Lwa4PqbyPUNYu2B7Ig5AoGBAIoI\nS6xjLYx8kC2f4UPv9fIvlBHlrLCMWOk4uYRg5ZPaz1t6kY4CIlklLnuuuS3ug7xw\neWJqKODEi08l58eVl+m6Mqu+4r81c/DkVW8j/qv59JhKCQjTSjzWC1riFHrc5YWX\nvli14AvQW1ymq+OT1WjOkWIhdLU9SvWBkli3JeCRAoGBAJkBquw2P/1sceVW80Pz\nTti0sq8XTpUu5ntUx0YVt8eeCf9BG0Pv2VM0zoM8v7pwAZ5Ze1EjC2js7fDuellP\n1bJQ6oGpNhnjUwDL2Aw0CF1NqxOCfqNI/SXZ812EoUzqhSALOL8bO508llvEw8eo\n3YX1j7NRcacbPUD5V+LNlfPA\n-----END PRIVATE KEY-----\n",
+  "client_email": "artdock@poap-app-hosting.iam.gserviceaccount.com",
+  "client_id": "117240093700400770488",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/artdock%40poap-app-hosting.iam.gserviceaccount.com"
+}

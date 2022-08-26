@@ -19,20 +19,11 @@ module Api
             end
 
             @user.role = role_name
-            render json: { status: 'SUCCESS', message: 'Loaded the user', data: @user }
+            render json: { status: 'SUCCESS', message: 'Loaded the user', data: @user.as_json(include: :roles) }
         end
 
         def my_page
-          role = current_api_v1_user.role_users.select(:role_id)
-            role_name = []
-
-            role.each do |data|
-              role_id = data["role_id"]
-              role_name.push(Role.find(role_id).role_name)
-            end
-
-            current_api_v1_user.role = role_name
-          render json: { status: 'SUCCESS', message: 'Loaded your data', data: current_api_v1_user }
+          render json: { status: 'SUCCESS', message: 'Loaded your data', data: current_api_v1_user.as_json(include: :roles) }
         end
   
         # def destroy
