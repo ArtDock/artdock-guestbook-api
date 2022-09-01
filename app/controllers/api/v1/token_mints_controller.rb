@@ -6,11 +6,26 @@ module Api
             def mint_to_user
                 require "net/http"
                 require "json"
-                @access_token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5qQTNOalpGUWpkRE9ESTNRa0V3UlVSRE9VVkVNRVUxT1VVd1JrSTNNRGs1TlRORVFqUTNSUSJ9.eyJpc3MiOiJodHRwczovL3BvYXBhdXRoLmF1dGgwLmNvbS8iLCJzdWIiOiI2dUdYUUthOVpMRndLTnlHU1lRQW5sRkJFSVVDcUpmRUBjbGllbnRzIiwiYXVkIjoiYXJ0ZG9jayIsImlhdCI6MTY1NTE5MzM0MCwiZXhwIjoxNjU1Mjc5NzQwLCJhenAiOiI2dUdYUUthOVpMRndLTnlHU1lRQW5sRkJFSVVDcUpmRSIsInNjb3BlIjoibWludCIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsInBlcm1pc3Npb25zIjpbIm1pbnQiXX0.jcU4QYcqbVBCXNsPJWvBvaaYBLv4s8XaC0N5dBx0mM6xO2Vb-C6xfhTwIx9AsZyOpygu9tvqGilO4ctlvX6K0TM7b88aeLZocgm68w3yqLbkbwPCOhYkQOrSeF1qe6LoXj50OKnJT3sO80KyQNyr9cSW9-Qgn2yCUmsDCYxRFoAoLI9KtZOGUcaH9HEZYZQr2fW2cNgzgXOK8C5ncCJKIDi_TFYZaamEzcrLIIJxmvvhBtYQFo0m59yJJ25G5vB-NP4BOlzi-PmdVolQZZ8eFi2YLid64J6Lhm_paUxWJ6AR7OJA5pf3pnddfbC0x0Xkyieg7BbU0dUsiFoZ8RjB_g"
-                get_code_list(@access_token)
-                get_mint_secret(@list_code, @access_token)
-                mint_to_wallet(@mint_secret, @qr_hash, @access_token)
-                render json: { status: 'SUCCESS', message: @mint_res_code, data: @mint_res_body }
+                @access_token = Token.find(1).token.to_s
+                res = get_code_list(@access_token)
+                if res.code.to_i == 403
+                    puts 'request token'
+                    get_access_token
+                    Token.find(1).update(token: @access_token)
+                    res = get_code_list(@access_token)
+                end
+                if res.code.to_i == 200
+                    res = get_mint_secret(@list_code, @access_token)
+                end
+                if res.code.to_i == 200
+                    res = mint_to_wallet(@mint_secret, @qr_hash, @access_token)
+                end
+                if res.code.to_i == 200
+                    render json: { status: 'SUCCESS', message: JSON.parse(res.code), data: JSON.parse(res.body) }
+                else
+                    render json: { status: 'ERROR', message: JSON.parse(res.code), data: JSON.parse(res.body) }
+                end
+                
             end
 
             private
@@ -38,12 +53,14 @@ module Api
 
                     res = http.request(req)
                     res_body = JSON.parse(res.body)
-                    puts res_body["access_token"]
+                    # puts res_body["access_token"]
                     if res_body["access_token"].nil?
                         @access_token = "none"
                     else
                         @access_token = res_body["access_token"]
                     end
+
+                    return res
                 end
             end
 
@@ -75,6 +92,8 @@ module Api
                     res = http.request(req)
                     res_body = JSON.parse(res.body)
                     @list_code = res_body
+
+                    return res
                 end
             end
 
@@ -106,6 +125,8 @@ module Api
                     res = http.request(req)
                     res_body = JSON.parse(res.body)
                     @mint_secret = res_body["secret"]
+
+                    return res
                 end
             end
 
@@ -136,6 +157,8 @@ module Api
                     res_code = JSON.parse(res.code)
                     @mint_res_code = res_code
                     @mint_res_body = res_body
+
+                    return res
                 end
             end
 

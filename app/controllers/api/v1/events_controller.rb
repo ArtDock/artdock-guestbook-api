@@ -2,6 +2,7 @@ module Api
   module V1
     class EventsController < ApplicationController
       before_action :set_event, only: [:show, :update, :destroy]
+      before_action :authenticate_api_v1_user!, only: [:create]
 
       def index
         events = Event.order(created_at: :desc)
@@ -15,22 +16,29 @@ module Api
 
       def create
         create_poap_event()
-        # event = Event.new(event_params)
+        if @create_res_code == 200
 
-        # user_id = User.find(params[:user].to_i).id
-        # event_params.delete('user')
-        # puts params[:user]
-        # logger.debug "task1: #{event_params}"
-        # logger.debug "task2: #{user_id}"
-        # event = Event.new(event_params.merge(user_id: user_id))
+          ep = event_params
+          ep[:image] = @create_res_body["image_url"]
+          ep.delete('secret_code')
+          user_id = current_api_v1_user.id
 
-        # if event.save
-        #   render json: { status: 'SUCCESS', data: event }
-        # else
-        #   render json: { status: 'ERROR', data: event.errors }
-        # end
+          event = Event.new(ep.merge(user_id: user_id, poap_event_id: @create_res_body["id"], status: 'created'))
 
-        render json: { status: 'SUCCESS', message: @create_res_code, data: @create_res_body }
+          if event.save
+            event_account = EventAccount.new(code: params[:secret_code], event_id: event[:id])
+            event_account.save
+
+            render json: { status: 'SUCCESS', data: event }
+            return
+          else
+            render json: { status: 'ERROR', data: event.errors }
+            return
+          end
+
+        else
+          render json: { status: 'ERROR', message: 'poap event create falied', data: @create_res_body }
+        end     
       end
 
       def destroy
@@ -56,27 +64,30 @@ module Api
 
       # 必要なパラメータと許可するパラメータ
       def event_params
-        params.require(:event).permit(:user, :name, :description, :city, :country, :start_date, :end_date, :expiry_date, :year, :event_url, :virtual_event, :image, :secret_code, :event_template_id, :email, :requested_codes, :private_event)
+        params.permit(:virtual_event, :name, :description, :city, :country, :start_date, :end_date, :expiry_date, :year, :event_url, :image, :private_event, :secret_code, :email, :requested_codes, :event_template_id, :latitude, :longitude)
       end
 
       def create_poap_event()
         require "net/http"
         require "uri"
         require 'base64'
+        require 'openssl'
 
         uri = URI("https://api.poap.tech/events")
         https = Net::HTTP.new(uri.host, uri.port)
         # https.use_ssl = uri.scheme === "https"
         https.use_ssl = true
 
-        start_date = params[:start_date].to_date.strftime("%Y-%b-%d")
-        end_date = params[:end_date].to_date.strftime("%Y-%b-%d")
-        expiry_date = params[:expiry_date].to_date.strftime("%Y-%b-%d")
+        start_date = params[:start_date].to_date.strftime("%Y-%m-%d")
+        end_date = params[:end_date].to_date.strftime("%Y-%m-%d")
+        expiry_date = params[:expiry_date].to_date.strftime("%Y-%m-%d")
 
         uploaded_file = params[:image]
         # b64_uploaded_file = Base64.strict_encode64(File.read(uploaded_file.path))
         puts uploaded_file.content_type
         puts uploaded_file.original_filename
+
+        puts start_date
 
         form_data = [
           ['virtual_event', params[:virtual_event]],
@@ -89,7 +100,7 @@ module Api
           ['expiry_date', expiry_date],
           ['year', params[:year]],
           ['event_url', params[:event_url]],
-          ['image', File.open(uploaded_file.path)],
+          ['image', File.open(uploaded_file.path, "rb"), {content_type: "image/png"}],
           ['private_event', params[:private_event]],
           ['secret_code', params[:secret_code]],
           ['email', params[:email]],
