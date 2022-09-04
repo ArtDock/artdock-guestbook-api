@@ -21,7 +21,7 @@ module Api
                     res = mint_to_wallet(@mint_secret, @qr_hash, @access_token)
                 end
                 if res.code.to_i == 200
-                    render json: { status: 'SUCCESS', message: JSON.parse(res.code), data: JSON.parse(res.body) }
+                    render json: { status: 'SUCCESS', message: JSON.parse(res.code), data: "トークンを取得しました！イベントへのレビューが可能になります。" }
                 else
                     render json: { status: 'ERROR', message: JSON.parse(res.code), data: JSON.parse(res.body) }
                 end
@@ -146,6 +146,9 @@ module Api
                     "X-API-Key" => ENV["X_API_Key"],
                     "Accept" => "application/json"
                 }
+
+                puts p
+
 
                 http.start do
                     req = Net::HTTP::Post.new(uri.path)

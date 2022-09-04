@@ -1,7 +1,7 @@
 module Api
     module V1
       class UsersController < ApplicationController
-        before_action :authenticate_api_v1_user!
+        before_action :authenticate_api_v1_user!, only: [:update, :destroy]
         before_action :set_user, only: [:show, :update, :destroy]
         
         def index
@@ -31,13 +31,19 @@ module Api
         #   render json: { status: 'SUCCESS', message: 'Deleted the event', data: @event }
         # end
   
-        # def update
-        #   if @event.update(event_params)
-        #     render json: { status: 'SUCCESS', message: 'Updated the event', data: @event }
-        #   else
-        #     render json: { status: 'SUCCESS', message: 'Not updated', data: @event.errors }
-        #   end
-        # end
+        def update
+          puts params[:id]
+          puts current_api_v1_user.id
+          if params[:id].to_i == current_api_v1_user.id
+            if @user.update(user_update_params)
+              render json: { status: 'SUCCESS', message: 'Updated the user', data: @user }
+            else
+              render json: { status: 'SUCCESS', message: 'Not updated', data: @user.errors }
+            end
+          else
+            render json: { status: 'ERROR', message: '', data: '' }
+          end
+        end
   
         private
   
@@ -45,9 +51,9 @@ module Api
           @user = User.find(params[:id])
         end
   
-        def user_params
+        def user_update_params
           # logger.debug(current_api_v1_user)
-          params.permit(:name, :role, :email, :img).merge(user: current_api_user)
+          params.permit(:name, :wallet_address)
         end
       end
     end
