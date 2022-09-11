@@ -52,7 +52,7 @@ module Api
                         # FirebaseStorageへの保存
                         require "google/cloud/storage"
                         uploaded_file = params[:image]
-                        storage = Google::Cloud::Storage.new project: ENV["FIREBASE_PROJECT_ID"], keyfile: ENV["FIREBASE_KEY_FILE"]
+                        storage = Google::Cloud::Storage.new project: ENV["FIREBASE_PROJECT_ID"], keyfile: "#{Rails.root.to_s}/config/firebase-auth.json"
                         bucket = storage.bucket ENV["FIREBASE_STORAGE_BUCKET_ID"]
                         require "active_support/all"
                         file = bucket.create_file uploaded_file.path, metadata: { firebaseStorageDownloadTokens: SecureRandom.uuid }
