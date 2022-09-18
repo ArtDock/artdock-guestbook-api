@@ -4,8 +4,8 @@ module Api
             before_action :set_user, only: [:show, :update, :destroy]
 
             def show
-                @event = @user.events
-                render json: { status: 'SUCCESS', message: 'Loaded the user', data: @event }
+                @event = @user.events.order(start_date: "DESC")
+                render json: { status: 'SUCCESS', message: 'Loaded the user', data: @event.as_json(include: [reviews: {include: [:user]}]) }
             end
 
             private

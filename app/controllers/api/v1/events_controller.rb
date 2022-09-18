@@ -7,11 +7,11 @@ module Api
       def index
         events = Event.order(created_at: :desc)
         events = events.includes(:user)
-        render json: { status: 'SUCCESS', message: 'Loaded events', data: events.as_json(include: [:user, :reviews]) }
+        render json: { status: 'SUCCESS', message: 'Loaded events', data: events.as_json(include: [:user, reviews: {include: [:user]}]) }
       end
 
       def show
-        render json: { status: 'SUCCESS', message: 'Loaded the event', data: @event.as_json(include: [:user, :reviews]) }
+        render json: { status: 'SUCCESS', message: 'Loaded the event', data: @event.as_json(include: [:user, reviews: {include: [:user]}]) }
       end
 
       def create
