@@ -5,7 +5,7 @@ module Api
 
             def show
                 @event = @user.events.order(start_date: "DESC")
-                render json: { status: 'SUCCESS', message: 'Loaded the user', data: @event.as_json(include: [reviews: {include: [:user]}]) }
+                render json: { status: 'SUCCESS', message: 'Loaded the user', data: @event.as_json(include: [:user, reviews: {include: [:user]}]) }
             end
 
             private
