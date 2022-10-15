@@ -5,13 +5,22 @@ module Api
       before_action :authenticate_api_v1_user!, only: [:create]
 
       def index
-        events = Event.order(created_at: :desc)
-        events = events.includes(:user)
-        render json: { status: 'SUCCESS', message: 'Loaded events', data: events.as_json(include: [:user, reviews: {include: [:user]}]) }
+        events = Event.order(start_date: :desc)
+        events_response = []
+
+        events.find_each do |event|
+          events_response.append(event_response_public_format(event))
+        end
+
+        render json: {status: 'SUCCESS', message: 'Loaded events', data: events_response}
       end
 
       def show
-        render json: { status: 'SUCCESS', message: 'Loaded the event', data: @event.as_json(include: [:user, reviews: {include: [:user]}]) }
+        render json: { 
+          status: 'SUCCESS',
+          message: 'Loaded the event', 
+          data: event_response_public_format(@event)
+        }
       end
 
       def create
@@ -57,14 +66,43 @@ module Api
       private
       # 変数の定義
       def set_event
-        @event_user = Event.joins(:user)
-        puts @event_user
-        @event = @event_user.find(params[:id])
+        events = Event.includes(:user)
+        @event = events.find(params[:id])
       end
 
       # 必要なパラメータと許可するパラメータ
       def event_params
         params.permit(:virtual_event, :name, :description, :city, :country, :start_date, :end_date, :expiry_date, :year, :event_url, :image, :private_event, :secret_code, :email, :requested_codes, :event_template_id, :latitude, :longitude)
+      end
+
+      def event_response_public_format(event)
+        {
+          "id": event.id,
+          "user_id": event.user_id,
+          "name": event.name,
+          "description": event.description,
+          "city": event.city,
+          "country": event.country,
+          "start_date": event.start_date,
+          "end_date": event.end_date,
+          "expiry_date": event.expiry_date,
+          "year": event.year,
+          "event_url": event.event_url,
+          "virtual_event": event.virtual_event,
+          "image": event.image,
+          "event_template_id": event.event_template_id,
+          "requested_codes": event.requested_codes,
+          "private_event": event.private_event,
+          "created_at": event.created_at,
+          "updated_at": event.updated_at,
+          "poap_event_id": event.poap_event_id,
+          "status": event.status,
+          "latitude": event.latitude,
+          "longitude": event.longitude,
+
+          "user": event.user,
+          "reviews": event.reviews.is_public.as_json(include: :user) 
+        }
       end
 
       def create_poap_event()
@@ -75,7 +113,6 @@ module Api
 
         uri = URI("https://api.poap.tech/events")
         https = Net::HTTP.new(uri.host, uri.port)
-        # https.use_ssl = uri.scheme === "https"
         https.use_ssl = true
 
         start_date = params[:start_date].to_date.strftime("%Y-%m-%d")
@@ -83,11 +120,6 @@ module Api
         expiry_date = params[:expiry_date].to_date.strftime("%Y-%m-%d")
 
         uploaded_file = params[:image]
-        # b64_uploaded_file = Base64.strict_encode64(File.read(uploaded_file.path))
-        puts uploaded_file.content_type
-        puts uploaded_file.original_filename
-
-        puts start_date
 
         form_data = [
           ['virtual_event', params[:virtual_event]],
@@ -106,24 +138,7 @@ module Api
           ['email', params[:email]],
           ['requested_codes', params[:requested_codes]]
         ]
-        puts form_data
-        # p = {
-        #   "virtual_event": params[:virtual_event],
-        #   "name": params[:name],
-        #   "description": params[:description],
-        #   "city": params[:city],
-        #   "country": params[:country],
-        #   "start_date": start_date,
-        #   "end_date": end_date,
-        #   "expiry_date": expiry_date,
-        #   "year": params[:year],
-        #   "event_url": params[:event_url],
-        #   "image": params[:image],
-        #   "private_event": params[:private_event],
-        #   "secret_code": params[:secret_code],
-        #   "email": params[:email],
-        #   "requested_codes": params[:requested_codes]
-        # }
+
         headers = { 
           "Content-Type" => "multipart/form-data;",
           "X-API-Key" => ENV["X_API_Key"],

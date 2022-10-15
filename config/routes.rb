@@ -6,8 +6,12 @@ Rails.application.routes.draw do
           registrations: 'api/v1/auth/registrations'
       }
       resources :events
-      resources :posts
-      resources :reviews
+
+      resources :reviews do
+        collection do
+          get :my_review
+        end
+      end
 
       resources :roles do
         collection do
@@ -17,10 +21,13 @@ Rails.application.routes.draw do
 
       resources :users do
         collection do
-            get :my_page
+          get :my_page
+        end
+        member do
+          get :events
+          get :reviews
         end
       end
-      resources :event_users
 
       resource :token_mints do
         collection do
