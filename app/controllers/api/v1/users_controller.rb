@@ -48,8 +48,6 @@ module Api
         # end
   
         def update
-          puts params[:id]
-          puts current_api_v1_user.id
           if params[:id].to_i == current_api_v1_user.id
             if @user.update(user_update_params)
               render json: { status: 'SUCCESS', message: 'Updated the user', data: @user }

@@ -38,7 +38,6 @@ Rails.application.routes.draw do
       resources :poap_gating  do
         collection do
           post :gating_test
-          post :post_review
         end
       end
 
