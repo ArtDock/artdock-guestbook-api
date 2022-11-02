@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_30_140244) do
+ActiveRecord::Schema.define(version: 2022_11_02_064359) do
 
   create_table "event_accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "event_id"
@@ -49,6 +49,14 @@ ActiveRecord::Schema.define(version: 2022_10_30_140244) do
     t.string "title"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "review_share_hashes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "review_id"
+    t.string "hash_string"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["review_id"], name: "index_review_share_hashes_on_review_id"
   end
 
   create_table "reviews", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -114,6 +122,7 @@ ActiveRecord::Schema.define(version: 2022_10_30_140244) do
   end
 
   add_foreign_key "events", "users"
+  add_foreign_key "review_share_hashes", "reviews"
   add_foreign_key "reviews", "events"
   add_foreign_key "reviews", "users"
   add_foreign_key "role_users", "roles"

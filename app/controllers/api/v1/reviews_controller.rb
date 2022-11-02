@@ -1,9 +1,9 @@
 module Api
     module V1
         class ReviewsController < ApplicationController
-            before_action :authenticate_api_v1_user!, only: [:create, :update, :destroy, :my_review]
+            before_action :authenticate_api_v1_user!, only: [:create, :update, :destroy, :my_review, :get_share_hash]
             around_action :set_scope
-            before_action :set_review, only: [:show, :update, :destroy]
+            before_action :set_review, only: [:show, :update, :destroy, :get_share_hash]
             before_action :gating, only: [:create, :update]
 
             def index
@@ -104,6 +104,26 @@ module Api
                 render json: { status: 'SUCCESS', message: 'Loaded the reviews', data: @user_reviews.as_json(include: [:event, :user]) }
             end
 
+            def get_share_hash
+                if @review.user.id == current_api_v1_user.id
+                    if ReviewShareHash.where(review_id: @review.id).exists?
+                        review_share_hash = @review.review_share_hash
+                        render json: { status: 'SUCCESS', message: 'Loaded the share_hash', data: review_share_hash}
+                    else
+                        hash_string = Digest::SHA1.hexdigest(Time.now.to_s)
+                        review_share_hash = ReviewShareHash.new(review_id: @review.id, hash_string: hash_string)
+                        if review_share_hash.save
+                            render json: { status: 'SUCCESS', message: 'Created the share_hash', data: review_share_hash}
+                        else
+                            render json: { status: 'ERROR', message: 'Cannot create share_hash', data: '' }
+                        end
+                    end
+                   
+                else
+                    render json: { status: 'ERROR', message: 'Not permission', data: '' }
+                end
+            end
+
             private
 
             def set_scope
@@ -113,6 +133,15 @@ module Api
             end
 
             def set_review
+                if !(Review.find(params[:id]).review_share_hash.nil?)
+                    puts Review.find(params[:id]).review_share_hash.hash_string
+                    puts params[:share]
+                    if params[:share] === Review.find(params[:id]).review_share_hash.hash_string
+                        @review = Review.find(params[:id])
+                        return
+                    end
+                end
+                
                 if request.headers[:uid] === Review.find(params[:id]).user.uid
                     @review = Review.find(params[:id])
                 else

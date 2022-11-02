@@ -11,6 +11,9 @@ Rails.application.routes.draw do
         collection do
           get :my_review
         end
+        member do
+          get :get_share_hash
+        end
       end
 
       resources :roles do
