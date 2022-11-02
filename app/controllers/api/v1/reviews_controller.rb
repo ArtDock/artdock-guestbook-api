@@ -1,8 +1,8 @@
 module Api
     module V1
         class ReviewsController < ApplicationController
-            around_action :set_scope
             before_action :authenticate_api_v1_user!, only: [:create, :update, :destroy, :my_review]
+            around_action :set_scope
             before_action :set_review, only: [:show, :update, :destroy]
             before_action :gating, only: [:create, :update]
 
