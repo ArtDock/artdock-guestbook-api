@@ -20,7 +20,7 @@ module Api
             def create
                 if @gating_res_code == 200
 
-                    if Review.exists?(user_id: current_api_v1_user.id, event_id: review_params[:event_id])
+                    if Review.exists?(user_id: current_api_v1_user.id, event_id: review_params[:event_id]) && !(review_params[:private])
                         render json: { status: 'ERROR', message: 'This user already reviewed this event', data: @gating_res_body }
                         return
                     else
