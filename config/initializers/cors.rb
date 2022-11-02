@@ -17,7 +17,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
     allow do
-      origins 'http://localhost:8000', 'localhost:8080', 'https://poap-app-hosting.web.app', 'https://art-app-test.web.app'
+      origins 'http://localhost:8000', 'localhost:8080', 'https://poap-app-hosting.web.app', 'https://art-app-test.web.app', 'https://artmemo.caric.jp', 'https://artmemo.test.caric.jp'
   
   
       resource '*',
